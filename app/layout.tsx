@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
-import { Auth0Provider } from '@auth0/auth0-react';
-import { NavLinks } from './ui/nav-links'
+import { UserProvider } from '@auth0/nextjs-auth0/client';
+
+import NavLinks from "./ui/nav-links";
+
+import './globals.css';
  
 export const metadata: Metadata = {
   title: 'Ngondang Next',
@@ -12,19 +15,13 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <Auth0Provider
-      domain="dev-3zaiyeq4pdv4k48w.us.auth0.com"
-      clientId="i1JvsIxPaxbpux5OEpj1WTpFLIdQ8vh4"
-      authorizationParams={{
-        redirect_uri: window.location.origin
-      }}
-    >
       <html lang="en">
-        <body className="bg-gray-50 text-gray-900">
-          <NavLinks />
-          <main className="flex flex-col min-h-screen">{children}</main>
-        </body>
+        <UserProvider>
+          <body className="bg-gray-50 text-gray-900">
+            <NavLinks />
+            <main className="flex flex-col min-h-screen">{children}</main>
+          </body>
+        </UserProvider>
       </html>
-    </Auth0Provider>
   )
 }
