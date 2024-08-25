@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link'; // Import Link from next/link
+import Urls from '../utils/urls';
 
 const NavLinks = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -16,17 +17,17 @@ const NavLinks = () => {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0">
-              <Link href="/">
+              <Link href={Urls.home}>
                 <span className="text-2xl font-bold text-blue-600 cursor-pointer">Logo</span>
               </Link>
             </div>
             <div className="hidden md:flex md:ml-10 md:space-x-8">
-              <Link href="/">
+              <Link href={Urls.home}>
                 <span className="text-gray-800 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium cursor-pointer">
                   Home
                 </span>
               </Link>
-              <Link href="/dashboard">
+              <Link href={Urls.dashboard}>
                 <span className="text-gray-800 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium cursor-pointer">
                   Dashboard
                 </span>
@@ -43,17 +44,17 @@ const NavLinks = () => {
               </button>
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
-                  <Link href="#">
+                  <Link href={Urls.profile}>
                     <span className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
                       Your Profile
                     </span>
                   </Link>
-                  <Link href="#">
+                  <Link href={Urls.settings}>
                     <span className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
                       Settings
                     </span>
                   </Link>
-                  <Link href="/api/auth/logout">
+                  <Link href={Urls.logout}>
                     <span className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
                       Sign out
                     </span>
@@ -62,12 +63,12 @@ const NavLinks = () => {
               )}
             </div>
             <div className="hidden md:flex md:items-center">
-              <Link href="/api/auth/login">
+              <Link href={Urls.login}>
                 <span className="text-gray-800 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium cursor-pointer">
                   Login
                 </span>
               </Link>
-              <Link href="/api/auth/login">
+              <Link href={Urls.register}>
                 <span className="bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 cursor-pointer">
                   Register
                 </span>
