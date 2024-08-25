@@ -6,7 +6,7 @@ const Urls = {
     profile: '/profile',
     login: '/api/auth/login',
     logout: '/api/auth/logout',
-    register: '/register',
+    register: '/api/auth/register',
     settings: '/settings',
   
     // Function to generate a URL with a dynamic parameter
