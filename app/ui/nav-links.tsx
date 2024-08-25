@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import Link from 'next/link';
-import Urls from '../utils/urls';
+import Urls from '../../utils/urls';
 
 const NavLinks = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
