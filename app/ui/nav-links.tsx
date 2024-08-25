@@ -1,8 +1,8 @@
-"use client"; // This line marks this component as a client component
+"use client";
 
 import { useState } from 'react';
 import { useUser } from '@auth0/nextjs-auth0/client';
-import Link from 'next/link'; // Import Link from next/link
+import Link from 'next/link';
 import Urls from '../utils/urls';
 
 const NavLinks = () => {
