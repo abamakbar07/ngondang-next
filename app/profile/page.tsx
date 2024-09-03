@@ -1,11 +1,30 @@
 "use client";
 
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { useEffect } from 'react';
 import Loading from '@/components/Loading';
 
 
 export default function Profile() {
     const { user, isLoading } = useUser();
+
+    useEffect(() => {
+        if (user) {
+            // Call the API to validate the user
+            fetch('/api/user/validate', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ user }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                console.log(data.message);
+                })
+                .catch((err) => console.error('Failed to validate user:', err));
+        }
+      }, [user]);
 
     return (
         <>
