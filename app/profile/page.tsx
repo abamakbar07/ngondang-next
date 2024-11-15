@@ -1,49 +1,82 @@
-"use client";
+'use client'
 
-import { useUser } from '@auth0/nextjs-auth0/client';
-import { useEffect } from 'react';
-import Loading from '@/components/Loading';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
+const ProfilePage = () => {
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState('');
+  const router = useRouter();
 
-export default function Profile() {
-    const { user, isLoading } = useUser();
-
-    useEffect(() => {
-        if (user) {
-            // Call the API to validate the user
-            fetch('/api/user/validate', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ user }),
-            })
-                .then((res) => res.json())
-                .then((data) => {
-                console.log(data.message);
-                })
-                .catch((err) => console.error('Failed to validate user:', err));
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch('/api/auth/me');
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+        } else {
+          const data = await response.json();
+          setError(data.error || 'Failed to fetch user profile');
+          router.push('/auth/login');
         }
-      }, [user]);
+      } catch (err) {
+        setError('An error occurred while fetching user profile');
+        router.push('/auth/login');
+      }
+    };
 
-    return (
-        <>
-            {isLoading && <Loading />}
-            {user && (
-                <div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-100">
-                    <div className="bg-white shadow-md rounded-lg p-6 w-80">
-                        <img
-                            src={user.picture ? user.picture : ""}
-                            alt="Profile Picture"
-                            className="w-32 h-32 rounded-full mx-auto"
-                        />
-                        <h2 className="text-center text-2xl font-bold text-gray-800 mt-4">
-                            {user.name}
-                        </h2>
-                        <p className="text-center text-gray-600 mt-2">{user.email}</p>
-                    </div>
-                </div>
-            )}
-        </>
-    )
+    fetchUser();
+  }, [router]);
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6">Profile</h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+            Email
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="email"
+            type="email"
+            value={user.email}
+            readOnly
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+            Name
+          </label>
+          <input
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            id="name"
+            type="text"
+            value={user.name || ''}
+            readOnly
+          />
+        </div>
+        <div className="flex items-center justify-between">
+          <button
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            type="button"
+            onClick={() => {
+              localStorage.removeItem('token');
+              router.push('/auth/login');
+            }}
+          >
+            Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
+
+export default ProfilePage;
