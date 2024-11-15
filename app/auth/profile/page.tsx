@@ -3,31 +3,40 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+interface User {
+  name: string;
+  email: string;
+  profilePicture: string;
+  bio: string;
+}
+
 const ProfilePage = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState('');
   const router = useRouter();
 
   useEffect(() => {
     const fetchUser = async () => {
-      try {
-        const response = await fetch('/api/auth/profile', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
+      if (typeof window !== 'undefined') {
+        try {
+          const response = await fetch('/api/auth/profile', {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+          });
 
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.user);
-        } else {
-          const data = await response.json();
-          setError(data.error || 'Failed to fetch user profile');
+          if (response.ok) {
+            const data = await response.json();
+            setUser(data.user);
+          } else {
+            const data = await response.json();
+            setError(data.error || 'Failed to fetch user profile');
+            router.push('/auth/login');
+          }
+        } catch (err) {
+          setError('An error occurred while fetching the user profile');
           router.push('/auth/login');
         }
-      } catch (err) {
-        setError('An error occurred while fetching the user profile');
-        router.push('/auth/login');
       }
     };
 
