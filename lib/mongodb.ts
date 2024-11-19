@@ -1,42 +1,19 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-const MONGODB_URI = process.env.MONGODB_URI || '';
+dotenv.config();
 
-if (!MONGODB_URI) {
-  throw new Error('Please define the MONGODB_URI environment variable');
-}
-
-// Define MongooseCache interface
-interface MongooseCache {
-  conn: typeof mongoose | null;
-  promise: Promise<typeof mongoose> | null;
-}
-
-// Augment the global object with MongooseCache
-declare global {
-  var mongoose: MongooseCache | undefined;
-}
-
-// Use type assertion with unknown first
-let cached = (global as unknown as { mongoose: MongooseCache }).mongoose;
-
-if (!cached) {
-  cached = { conn: null, promise: null };
-  (global as unknown as { mongoose: MongooseCache }).mongoose = cached;
-}
-
-async function dbConnect() {
-  if (cached.conn) {
-    return cached.conn;
+const dbConnect = async (): Promise<void> => {
+  try {
+  const uri = process.env.MONGODB_URI;
+    if (!uri) {
+      throw new Error("MongoDB URI is not defined in environment variables");
+    }
+    await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    console.log('MongoDB connected');
+  } catch (err) {
+    console.error
   }
-
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGODB_URI).then((mongoose) => {
-      return mongoose;
-    });
-  }
-  cached.conn = await cached.promise;
-  return cached.conn;
-}
+};
 
 export default dbConnect;
