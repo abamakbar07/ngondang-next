@@ -12,8 +12,29 @@ export default function SignupPage() {
   const [error, setError] = useState('');
   const router = useRouter();
 
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password: string): boolean => {
+    return password.length >= 6; // Assuming a minimum password length of 6 characters
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+
+    if (!validateEmail(email)) {
+      setError('Invalid email address');
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setError('Password must be at least 6 characters long');
+      return;
+    }
+
     try {
       await signup(email, name, picture, password);
       router.push('/login');
@@ -27,7 +48,7 @@ export default function SignupPage() {
       <h1 className="text-4xl font-bold text-center text-blue-600">Sign Up</h1>
       <form onSubmit={handleSubmit} className="mt-8 space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 custom-cursor-default-hover">Email</label>
           <input
             type="email"
             id="email"
@@ -38,7 +59,7 @@ export default function SignupPage() {
           />
         </div>
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700 custom-cursor-default-hover">Name</label>
           <input
             type="text"
             id="name"
@@ -49,7 +70,7 @@ export default function SignupPage() {
           />
         </div>
         <div>
-          <label htmlFor="picture" className="block text-sm font-medium text-gray-700">Picture URL</label>
+          <label htmlFor="picture" className="block text-sm font-medium text-gray-700 custom-cursor-default-hover">Picture URL</label>
           <input
             type="text" // change into url later
             id="picture"
@@ -60,7 +81,7 @@ export default function SignupPage() {
           />
         </div>
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+          <label htmlFor="password" className="block text-sm font-medium text-gray-700 custom-cursor-default-hover">Password</label>
           <input
             type="password"
             id="password"

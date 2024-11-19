@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, model, models } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import dbConnect from '../lib/mongodb';
 
@@ -16,7 +16,7 @@ const UserSchema = new Schema<IUser>({
   password: { type: String, required: true },
 });
 
-UserSchema.pre('save', async function(next) {
+UserSchema.pre<IUser>('save', async function(next) {
   if (!this.isModified('password')) {
     return next();
   }
@@ -26,10 +26,15 @@ UserSchema.pre('save', async function(next) {
   next();
 });
 
-// Initialize database connection and model
-const initializeUser = async () => {
+let UserModel: Model<IUser> | null = null;
+
+const User = async (): Promise<Model<IUser>> => {
+  if (UserModel) {
+    return UserModel;
+  }
   await dbConnect();
-  return models.User || model<IUser>('User', UserSchema);
+  UserModel = mongoose.model<IUser>('User', UserSchema, 'User');
+  return UserModel;
 };
 
-export default initializeUser;
+export default User;
