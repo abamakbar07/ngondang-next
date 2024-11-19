@@ -8,11 +8,9 @@ export async function POST(req: Request) {
 
   try {
     const user = new (await User())({ email, name, picture, password });
-    console.log(user)
     await user.save();
     return NextResponse.json({ message: 'User created successfully' }, { status: 201 });
   } catch (error: any) {
-    console.log(error)
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }

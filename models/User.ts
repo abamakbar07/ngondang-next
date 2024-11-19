@@ -33,7 +33,11 @@ const User = async (): Promise<Model<IUser>> => {
     return UserModel;
   }
   await dbConnect();
-  UserModel = mongoose.model<IUser>('User', UserSchema, 'User');
+  if (!mongoose.models.User) {
+    UserModel = mongoose.model<IUser>('User', UserSchema, 'User');
+  } else {
+    UserModel = mongoose.models.User as Model<IUser>;
+  }
   return UserModel;
 };
 
