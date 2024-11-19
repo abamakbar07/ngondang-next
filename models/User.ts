@@ -27,7 +27,9 @@ UserSchema.pre('save', async function(next) {
 });
 
 // Initialize database connection and model
-export const initializeUser = async () => {
+const initializeUser = async () => {
   await dbConnect();
   return models.User || model<IUser>('User', UserSchema);
 };
+
+export default initializeUser;
