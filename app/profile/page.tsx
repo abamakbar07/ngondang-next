@@ -17,7 +17,7 @@ const ProfilePage = () => {
           setUser(data.user);
         } else {
           const data = await response.json();
-          setError(data.error || 'Failed to fetch user profile');
+          console.log(data.error || 'Failed to fetch user profile');
           router.push('/auth/login');
         }
       } catch (err) {
