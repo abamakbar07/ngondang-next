@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import Modal from '../../components/Modal';
+import Modal from '../components/Modal';
 
 export default function SignupPage() {
   const [email, setEmail] = useState('');
